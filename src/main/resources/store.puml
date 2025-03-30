@@ -1,0 +1,80 @@
+@startuml
+skinparam linetype ortho
+
+Client : Клиент - Web/Mobile
+API : API Gateway - Kong
+
+rectangle "Frontend" {
+    Web : Web SPA - React/Redux
+    Mobile : Mobile App - React Native
+}
+
+rectangle "Базы данных" {
+    AuthDB : Auth DB - PostgreSQL
+    CatalogDB : Catalog DB - PostgreSQL
+    ElasticSearch : ElasticSearch
+    RedisCart : Redis
+    OrderDB : Order DB - PostgreSQL
+    PaymentDB : Payment DB - PostgreSQL
+}
+
+rectangle "Очереди сообщений" {
+    OrderEvents : Order Events - Kafka
+    PaymentEvents : Payment Events - Kafka
+}
+
+rectangle "Внешние сервисы" {
+    PaymentGateway : Payment Gateway - Stripe
+    Logistics : Logistics API
+}
+
+rectangle "Мониторинг и логирование" {
+    Prometheus : Prometheus
+    ElkStack : ELK Stack
+    Grafana : Grafana Dashboards
+}
+
+rectangle "Инфраструктура" {
+    K8s : Kubernetes Cluster
+    Istio : Service Mesh - Istio
+}
+
+Client --> Web
+Client --> Mobile
+Client --> API
+
+API --> Auth : Auth Service
+API --> Catalog : Catalog Service
+API --> Cart : Cart Service
+API --> Order : Order Service
+API --> Payment : Payment Service
+API --> Notification : Notification Service
+
+Auth --> AuthDB
+Catalog --> CatalogDB
+Catalog --> ElasticSearch
+Cart --> RedisCart
+Order --> OrderDB
+Payment --> PaymentDB
+
+Order --> OrderEvents
+Payment --> PaymentEvents
+OrderEvents --> Notification
+PaymentEvents --> Notification
+
+Notification --> EmailService : Email Service - SendGrid
+Notification --> SMSService : SMS Service - Twilio
+
+Payment --> PaymentGateway
+Order --> Logistics
+
+Services : Все сервисы
+Services --> Prometheus
+Services --> ElkStack
+Prometheus --> Grafana
+
+All : Все компоненты
+All --> K8s
+K8s --> Istio
+
+@enduml

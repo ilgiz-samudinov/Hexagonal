@@ -1,0 +1,27 @@
+@startuml
+title Архитектура User Profile (Двустороннее взаимодействие)
+
+actor Client as "Клиент (Web/Mobile)"
+
+node "API Gateway" as APIGW
+node "Auth & Registration Service" as AuthService
+node "User Profile Service" as ProfileService
+node "News Feed Service" as NewsFeed
+node "Messaging Service" as Messaging
+node "Search Service" as SearchService
+node "Business Incubator & Matching Service" as BusinessIncubator
+node "Notification Service" as Notification
+
+Client --> APIGW : HTTP запросы
+APIGW --> AuthService : Аутентификация и регистрация
+APIGW --> ProfileService : CRUD запросы профиля
+
+ProfileService <--> AuthService : Получение/Отправка базовых данных\n(ID, email)
+ProfileService --> NewsFeed : Публикация событий об изменениях профиля
+NewsFeed --> ProfileService : Запрос обновлённой информации
+ProfileService <--> Messaging : Передача данных (имя, аватар) для чата
+ProfileService <--> SearchService : Передача/обновление данных для индексации
+ProfileService <--> BusinessIncubator : Обмен данными профиля для сопоставления
+ProfileService --> Notification : Публикация событий для уведомлений
+
+@enduml
