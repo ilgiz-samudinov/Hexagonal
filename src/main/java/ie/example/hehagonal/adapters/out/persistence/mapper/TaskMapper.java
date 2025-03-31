@@ -9,11 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskMapper {
 
-<<<<<<< HEAD
-    // Преобразование Task в TaskEntity
-=======
 
->>>>>>> 3946ac4 (hexagonal_arhitecture)
     public TaskEntity toEntity(Task domain) {
         return TaskEntity.builder()
                 .id(domain.getId())
